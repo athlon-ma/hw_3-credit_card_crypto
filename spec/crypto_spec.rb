@@ -57,4 +57,20 @@ describe 'Test card info encryption' do
     end
   end
 
+    hashedMethod = { "Using Double Transposition (Dry Method) Cipher" => DoubleTranspositionCipher, "Using AES (Dry Method) Cipher" => AesCipher }
+
+  hashedMethod.each do |desc, cipher|
+    describe '#{desc}' do
+      it 'should encrypt text' do
+        enc = cipher::encrypt(@cc, @key)
+        enc.wont_equal @cc.to_s
+      end
+
+      it 'should decrypt text and equal original' do
+        enc = cipher::encrypt(@cc, @key)
+        dec = cipher::decrypt(enc, @key)
+        dec.must_equal @cc.to_s
+      end
+    end
+
 end
