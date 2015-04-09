@@ -1,11 +1,13 @@
 require_relative '../credit_card'
 require_relative '../substitution_cipher'
+require_relative '../double_trans_cipher'
 require 'minitest/autorun'
 
 describe 'Test card info encryption' do
   before do
     @cc = CreditCard.new('4916603231464963', 'Mar-30-2020', 'Soumya Ray', 'Visa')
     @key = 3
+    @key2 = 4
   end
 
   describe 'Using Caesar cipher' do
@@ -36,4 +38,23 @@ describe 'Test card info encryption' do
 
   # TODO: Add tests for double transposition and AES ciphers
   #       Can you DRY out the tests using metaprogramming? (see lecture slide)
+  describe 'Using Double Transposition Cipher' do
+    it 'Should encrypt text' do
+      enc =  DoubleTranspositionCipher.encrypt(@cc, @key)
+      enc.wont_equal @cc.to_s
+    end
+
+    it 'Should decrypt text and equal original text' do
+      enc =  DoubleTranspositionCipher.encrypt(@cc, @key)
+      dec =  DoubleTranspositionCipher.decrypt(enc, @key)
+      dec.must_equal @cc.to_s
+    end
+
+    it 'Should not decrypt text with different key' do
+      enc =  DoubleTranspositionCipher.encrypt(@cc, @key)
+      dec =  DoubleTranspositionCipher.decrypt(enc, @key2)
+      dec.wont_equal @cc.to_s
+    end
+  end
+
 end
