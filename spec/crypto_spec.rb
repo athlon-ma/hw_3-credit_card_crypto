@@ -1,6 +1,7 @@
 require_relative '../credit_card'
 require_relative '../substitution_cipher'
 require_relative '../double_trans_cipher'
+require_relative '../aes_cipher'
 require 'minitest/autorun'
 
 describe 'Test card info encryption' do
@@ -8,6 +9,7 @@ describe 'Test card info encryption' do
     @cc = CreditCard.new('4916603231464963', 'Mar-30-2020', 'Soumya Ray', 'Visa')
     @key = 3
     @key2 = 4
+    @key3 = "Some long text for ssh password"
   end
 
   describe 'Using Caesar cipher' do
@@ -57,8 +59,7 @@ describe 'Test card info encryption' do
     end
   end
 
-    hashedMethod = { "Using Double Transposition (Dry Method) Cipher" => DoubleTranspositionCipher, "Using AES (Dry Method) Cipher" => AesCipher }
-
+    hashedMethod = { "Using Double Transposition (Dry Method) Cipher" => DoubleTranspositionCipher} #, "Using AES (Dry Method) Cipher" => AesCipher #removed because AES requires a longer password than just num 3} 
   hashedMethod.each do |desc, cipher|
     describe '#{desc}' do
       it 'should encrypt text' do
@@ -71,6 +72,19 @@ describe 'Test card info encryption' do
         dec = cipher::decrypt(enc, @key)
         dec.must_equal @cc.to_s
       end
+    end
+  end
+
+  describe 'Using AES Cipher' do
+    it 'Should encrypt text' do
+      enc =  AesCipher.encrypt(@cc, @key3)
+      enc.wont_equal @cc.to_s
+    end
+
+    it 'Should decrypt text and equal original text' do
+      enc =  AesCipher.encrypt(@cc, @key3)
+      dec =  AesCipher.decrypt(enc, @key3)
+      dec.must_equal @cc.to_s
     end
   end
 
