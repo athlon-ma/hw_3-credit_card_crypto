@@ -47,7 +47,6 @@ def hash
   #       serialized contents.
   #       Credit cards with identical information should produce the same hash.
   self.to_s.hash
-
 end
 
 # return a cryptographically secure hash
@@ -58,4 +57,4 @@ def hash_secure
   sha256 = OpenSSL::Digest::SHA256.new
   sha256.digest(self.to_s).unpack('h*')
 end
-end
+
